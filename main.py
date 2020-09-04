@@ -10,13 +10,15 @@ def hello_world():
 
 @app.route('/item/new', methods = ['POST'])
 def add_item():
-   #Get item from the POST body
-   req_data = request.get_json()
-   item = req_data['item']
+   #Get item from the POST body      
+   item = request.args.get('item')
+   if not item:
+      response = Response("{'error': 'Item not added - :( '}", status=400 , mimetype='application/json')
+      return response
    
    #Add item to the list
    res_data = helper.add_to_list(item)
-
+   
    #Return error if item not added
    if res_data is None:
       response = Response("{'error': 'Item not added - '}"  + item, status=400 , mimetype='application/json')
@@ -27,7 +29,7 @@ def add_item():
    
    return response
 
-@app.route('/items/all')
+@app.route('/items/all', methods=['GET'])
 def get_all_items():
    # Get items from the helper
    res_data = helper.get_all_items()
@@ -59,9 +61,9 @@ def get_item():
 @app.route('/item/update', methods = ['PUT'])
 def update_status():
    #Get item from the POST body
-   req_data = request.get_json()
-   item = req_data['item']
-   status = req_data['status']
+   item = request.args.get('item')
+   status = request.args.get('status')
+   
    
    #Update item in the list
    res_data = helper.update_status(item, status)
@@ -77,8 +79,7 @@ def update_status():
 @app.route('/item/remove', methods = ['DELETE'])
 def delete_item():
    #Get item from the POST body
-   req_data = request.get_json()
-   item = req_data['item']
+   item = request.args.get('item')
    
    #Delete item from the list
    res_data = helper.delete_item(item)
@@ -90,3 +91,6 @@ def delete_item():
    response = Response(json.dumps(res_data), mimetype='application/json')
    
    return response
+
+if __name__ == '__main__':    
+    app.run(debug=True)

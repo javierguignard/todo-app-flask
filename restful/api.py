@@ -1,4 +1,4 @@
-from helper_restful import (add_to_list, delete_item, 
+from db.helper_restful import (add_to_list, delete_item, 
                             update_status, STATUS_LIST,
                             get_item, get_all_items,start_db)
 from flask import Flask
@@ -19,7 +19,19 @@ def abort_if_todo_doesnt_exist(todo_id):
 #Makeing first URL
 @app.route('/')
 def hello_world():
-   return 'Api Restful <b>(Really!)</b>'
+   return '''
+    <script>
+          var id=0;
+            function pressed(){
+                id++;
+                document.getElementById('apretado').innerHTML += '<span id="span'+id+'">Hola</span><br>';
+            }
+          </script>
+            Api Restful <b>(Really!)</b><br>
+          <button id='boton' onclick="setTimeout(pressed, 5000)" >PressMe</button>
+          <div id="apretado"></div>
+          
+          '''
 
 # Todo
 # shows a single todo item and lets you delete/delete a todo item
